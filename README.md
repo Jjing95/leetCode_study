@@ -5,7 +5,7 @@
    * [4月3日](#4%E6%9C%883%E6%97%A5)
    * [4月6日]()
 ## 4月1日
-### 1、139单词拆分
+### 1、[139单词拆分](https://leetcode-cn.com/problems/word-break/)
 #### 题目要求
 给你一个字符串`s`和一个字符串列表`wordDict`作为字典。请你判断是否可以利用字典中出现的单词拼接出`s`。   
 
@@ -200,3 +200,124 @@ var addTwoNumbers = function(l1, l2) {
 ```
 ## 4月3日
 ### 1、7整数反转
+#### 题目要求
+给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。   
+如果反转后整数超过 32 位的有符号整数的范围 `[−231,  231 − 1]` ，就返回 0。   
+**假设环境不允许存储 64 位整数（有符号或无符号）。**
+#### 解题思路
+1. 先将数字转为字符串，然后切割成为数组，再反转数组
+2. 判断入参的正负值，根据正负值处理答案正负值
+3. 判断限制条件
+#### 正解
+```javascript
+var reverse = function(x) {
+    const symbol = String(x).split("").reverse().join("")
+    let result;
+    if(x>=0){
+        result =  Number(symbol) 
+    }else{
+        result = Number(symbol.slice(-1)+symbol.slice(0,-1)) 
+    }
+    if(result < (-2)**31 || result > (2**31 -1)){
+        result = 0
+    }
+    return result
+};
+```
+## 4月6日
+### 1、390消除游戏
+#### 题目描述
+列表**arr**由在范围 **[1, n]** 中的所有整数组成，并按严格递增排序。请你对**arr**应用下述算法：   
+从左到右，删除第一个数字，然后每隔一个数字删除一个，直到到达列表末尾。   
+重复上面的步骤，但这次是从右到左。也就是，删除最右侧的数字，然后剩下的数字每隔一个删除一个。   
+不断重复这两步，从左到右和从右到左交替进行，直到只剩下一个数字。   
+给你整数**n**，返回**arr**最后剩下的数字。
+#### 解题思路
+根据题意可知，消除的总轮次为**Math.log2(n)**，每轮消除后剩下的数字都构成等差数列。   
+因此可以借助最小值**min**、最大值**max**、步长**step**3个变量来维护等差数列，每轮都更新等差数列的3个变量；最后一轮只剩一个数字，即**min**与**max**相等，任取一个返回即可。   
+需要注意的是奇数轮次是从左到右消除，即最小值必定改变，最大值只在等差数列个数为奇数时改变；偶数轮次则相反，最大值必定改变，最小值只在等差数列个数为奇数时改变。
+#### 正解
+```javascript
+var lastRemaining = function (n) {
+    let min = 1, max = n, step = 1;
+    for (let i = 1; i <= Math.log2(n); i++) {
+        if (i % 2) {
+            if (((max - min) / step + 1) % 2) max -= step;
+            min += step;
+        } else {
+            if (((max - min) / step + 1) % 2) min += step;
+            max -= step;
+        }
+        step *= 2;
+    }
+    return max;
+};
+```
+## 4月7日
+### 1、3无重复字符的最长子串
+#### 题目描述
+给定一个字符串**s**，请你找出其中不含有重复字符的**最长子串**的长度。
+#### 解题思路
+整体思路就是左指针不动，右指针在没遇到重复字符时一直往右移动，如果遇到重复字符了就重新开始记录，即左指针移动到最近出现的一个重复字符处，重新开始记录。   
+滑动窗口用来记录最长不出现重复字符的子串的区间   
+哈希表用来记录每个字符最后（最新）出现的索引
+#### 正解
+```javascript
+var lengthOfLongestSubstring = function(s) {
+    let left = 0;
+    let long = 0;
+    const map = new Map(), len = s.length;
+    for(let right = 0; right < len; right++){
+        // 遇到重复字符时还要判定 该重复字符的上一次出现位置是否在 滑动窗口左边界 left 的右边
+        if(map.has(s[right]) && map.get(s[right]) >= left){
+            left = map.get(s[right]) + 1; // 都满足，则更新，更新到最近出现的那个重复字符，它的上一个索引的右边
+        }
+        long = Math.max(long, right - left + 1); // 比较滑动窗口大小与 long 的长度
+        map.set(s[right], right); // 无论有没有重复，每次遍历都要更新字符的出现位置
+    }
+    return long;
+};
+```
+## 4月8日
+### 1、36有效的数独
+#### 题目描述
+请你判断一个**9 x 9**的数独是否有效。只需要根据以下规则 ，验证已经填入的数字是否有效即可。   
+数字**1-9**在每一行只能出现一次。   
+数字**1-9**在每一列只能出现一次。   
+数字**1-9**在每一个以粗实线分隔的**3x3**宫内只能出现一次。   
+
+>**注意：**
+>一个有效的数独（部分已被填充）不一定是可解的。
+>只需要根据以上规则，验证已经填入的数字是否有效即可。
+>空白格用 **'.'**表示。
+#### 解题思路
+给每一行、每一列、每个3x3子数组定义一个键值对 **Map**，之后遍历数组，若单个键值对中出现重复数字返回**false**。
+#### 正解
+```javascript
+var isValidSudoku = function(board) {
+let rows = []
+let cols = []
+let box = []
+for (let i = 0; i < 9; i++) {
+    rows[i] = new Map()
+    cols[i] = new Map()
+    box[i] = new Map()
+}
+for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+        if (board[i][j] !== '.') {
+            // 获取数字所在子数组的序号
+            let s = parseInt(i / 3) * 3 + parseInt(j / 3) 
+            if (rows[i].has(board[i][j]) || cols[j].has(board[i][j]) || box[s].has(board[i][j]))
+                return false
+            else {
+                rows[i].set(board[i][j], 1)
+                cols[j].set(board[i][j], 1)
+                box[s].set(board[i][j], 1)
+            }
+        }
+    }
+}
+return true
+};
+```
