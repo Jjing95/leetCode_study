@@ -3,7 +3,10 @@
    * [4月1日](#4%E6%9C%881%E6%97%A5)
    * [4月2日](#4%E6%9C%882%E6%97%A5)
    * [4月3日](#4%E6%9C%883%E6%97%A5)
-   * [4月6日]()
+   * [4月6日](#4%E6%9C%886%E6%97%A5)
+   * [4月7日](#4%E6%9C%887%E6%97%A5)
+   * [4月8日](#4%E6%9C%888%E6%97%A5)
+   * [4月9日](#4%E6%9C%889%E6%97%A5)
 ## 4月1日
 ### 1、[139单词拆分](https://leetcode-cn.com/problems/word-break/)
 #### 题目要求
@@ -69,7 +72,7 @@ var wordBreak = function(s, wordDict) {
 #### 解题过程中遇到的坑 -->
 
 ## 4月2日
-### 1、54螺旋矩阵
+### 1、[54螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
 #### 题目要求
 给你一个`m`行`n`列的矩阵`matrix`，请按照**顺时针螺旋顺序**，返回矩阵中的所有元素。
 #### 解题思路
@@ -118,7 +121,7 @@ var spiralOrder = function (matrix) {
 ```
 #### 解题过程中遇到的坑
 >这里有一个我觉得很容易错的地方，那就是`while`内层的`for`循环要添加垂直方向的边界判断，要不然在遍历非`n*n·矩阵的时候会有重复遍历的情况
-### 2、2两数相加
+### 2、[2两数相加](https://leetcode-cn.com/problems/add-two-numbers/)
 >有人相爱，有人夜里开车看海，有人LeetCode第二题也做不出来...
 #### 题目要求
 给你两个**非空**的链表，表示两个非负的整数。它们每位数字都是按照**逆序**的方式存储的，并且每个节点只能存储**一位**数字。   
@@ -199,7 +202,7 @@ var addTwoNumbers = function(l1, l2) {
 };
 ```
 ## 4月3日
-### 1、7整数反转
+### 1、[7整数反转](https://leetcode-cn.com/problems/reverse-integer/)
 #### 题目要求
 给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。   
 如果反转后整数超过 32 位的有符号整数的范围 `[−231,  231 − 1]` ，就返回 0。   
@@ -225,7 +228,7 @@ var reverse = function(x) {
 };
 ```
 ## 4月6日
-### 1、390消除游戏
+### 1、[390消除游戏](https://leetcode-cn.com/problems/elimination-game/)
 #### 题目描述
 列表**arr**由在范围 **[1, n]** 中的所有整数组成，并按严格递增排序。请你对**arr**应用下述算法：   
 从左到右，删除第一个数字，然后每隔一个数字删除一个，直到到达列表末尾。   
@@ -254,7 +257,7 @@ var lastRemaining = function (n) {
 };
 ```
 ## 4月7日
-### 1、3无重复字符的最长子串
+### 1、[3无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 #### 题目描述
 给定一个字符串**s**，请你找出其中不含有重复字符的**最长子串**的长度。
 #### 解题思路
@@ -279,7 +282,7 @@ var lengthOfLongestSubstring = function(s) {
 };
 ```
 ## 4月8日
-### 1、36有效的数独
+### 1、[36有效的数独](https://leetcode-cn.com/problems/valid-sudoku/submissions/)
 #### 题目描述
 请你判断一个**9 x 9**的数独是否有效。只需要根据以下规则 ，验证已经填入的数字是否有效即可。   
 数字**1-9**在每一行只能出现一次。   
