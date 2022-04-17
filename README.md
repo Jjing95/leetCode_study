@@ -7,6 +7,10 @@
    * [4月7日](#4%E6%9C%887%E6%97%A5)
    * [4月8日](#4%E6%9C%888%E6%97%A5)
    * [4月11日](#4%E6%9C%8811%E6%97%A5)
+   * [4月12日](#4%E6%9C%8812%E6%97%A5)
+   * [4月13日](#4%E6%9C%8813%E6%97%A5)
+   * [4月14日](#4%E6%9C%8814%E6%97%A5)
+   * [4月15日](#4%E6%9C%8815%E6%97%A5)
 ## 4月1日
 ### 1、[139单词拆分](https://leetcode-cn.com/problems/word-break/)
 #### 题目要求
@@ -322,5 +326,242 @@ for (let i = 0; i < board.length; i++) {
     }
 }
 return true
+};
+```
+## 4月11日
+### 1、[面试题17.09第k个数](https://leetcode-cn.com/problems/get-kth-magic-number-lcci/)
+#### 题目描述
+有些数的素因子只有**3，5，7**，请设计一个算法找出第**k**个数。注意，不是必须有这些素因子，而是必须不包含其他的素因子。例如，前几个数按顺序应该是**1，3，5，7，9，15，21**。
+#### 解题思路
+按照题意这个数必然可以拆解成**3^n * 5^m * 7^l**，  
+记录**m ,l ,n**的最大值 , 下一个仍然是可以拆分出新的**m ,l, n**;   
+**m, l, n**就代表， 对应因子出现的次数   
+所以下一个数，也能表示为之前的数乘**3**或**5**或**7**。   
+从**1**开始，下一个数字就在**1 * 3, 1 * 5, 1 * 7**这三个数字里选，   
+这样**3**就出现过一次了，如果下一次还出现**3**这个因子，肯定不可能还是与**1**相乘， 只能与下一位**3**相乘， 而**5，7**还是与**1**相乘，因为还没出现过。   
+因子出现一次，对应的记号就 **+1**。
+#### 正解
+```javascript
+var getKthMagicNumber = function(k) {
+    let [k3,k5,k7]= [0,0,0], fn = [1];
+
+    while(fn.length < k){
+        // let next = Math.pow(3,k3)* Math.pow(5, k5)*Math.pow() * 3;
+        let next = fn[k3]* 3 ;
+        next  = Math.min(next,fn[k5]* 5 )
+        next  = Math.min(next,fn[k7]* 7 )
+        if(fn[k3] * 3 === next){ k3++}
+        if(fn[k5] * 5 === next){ k5++}
+        if(fn[k7] * 7 === next){ k7++}
+        fn.push(next)
+    }
+    return fn[k-1]
+};
+```
+>***注意***：**k3, k5, k7**分别代表**3 5 7**因子在之前的数里面出现的最多的次数
+>也就是该因子 已经出现了多少次
+>当前数如果 是之前的某个数乘以该因子 则该因子的指针进一
+## 4月12日
+### 1、[1637两点之间不包含任何点的最宽垂直面积](https://leetcode-cn.com/problems/widest-vertical-area-between-two-points-containing-no-points/)
+#### 题目描述
+给你`n`个二维平面上的点`points`，其中`points[i] = [xi, yi]`，请你返回两点之间内部不包含任何点的 最宽垂直面积的宽度。   
+垂直面积的定义是固定宽度，而**y**轴上无限延伸的一块区域（也就是高度为无穷大）。最宽垂直面积为宽度最大的一个垂直面积。   
+请注意，垂直区域边上的点不在区域内。
+#### 解题思路
+不用考虑**y**轴，直接循环把**x**轴拿出来排序，循环拿到最大相邻间隔
+#### 正解
+```javascript
+var maxWidthOfVerticalArea = function(points) {
+    let arr =[]
+    // 循环拿到x轴数据
+    for(let i =0;i<points.length;i++) {
+        arr.push(points[i][0])
+    }
+    // 对x轴数据进行排序
+    arr.sort((a,b) => a-b)
+    let max = 0
+    // 循环拿到最大响铃间隔
+    for(let j=1;j<arr.length;j++) {
+        max = Math.max(max,arr[j]-arr[j-1])
+    }
+    return max
+}
+```
+## 4月13日
+### 1、[310最小高度树](https://leetcode-cn.com/problems/minimum-height-trees/)
+#### 题目描述
+树是一个无向图，其中任何两个顶点只通过一条路径连接。换句话说，一个任何没有简单环路的连通图都是一棵树。   
+给你一棵包含`n`个节点的树，标记为`0`到`n - 1`。给定数字`n`和一个有`n - 1`条无向边的`edges`列表（每一个边都是一对标签），其中`edges[i] = [ai, bi]`表示树中节点`ai`和`bi`之间存在一条无向边。   
+可选择树中任何一个节点作为根。当选择节点**x**作为根节点时，设结果树的高度为**h**。在所有可能的树中，具有最小高度的树（即，min(h)）被称为**最小高度树**。   
+请你找到所有的**最小高度树**并按**任意顺序**返回它们的根节点标签列表。
+#### 解题思路
+>思路来自力扣官方解答[leetcode](https://leetcode-cn.com/problems/minimum-height-trees/solution/zui-xiao-gao-du-shu-by-leetcode-solution-6v6f/)   
+>比较理解思路二中的深度优先搜索方法   
+
+   
+首先找到距离节点**00**的最远节点**xx**，然后找到距离节点**xx**的最远节点**yy**，然后找到节点**xx**与节点**yy**的路径，然后找到根节点。
+#### 正解
+```javascript
+var findMinHeightTrees = function(n, edges) {
+    const ans = [];
+    if (n === 1) {
+        ans.push(0);
+        return ans;
+    }
+    const adj = new Array(n).fill(0).map(() => new Array());
+    for (const edge of edges) {
+        adj[edge[0]].push(edge[1]);
+        adj[edge[1]].push(edge[0]);
+    }
+
+    const parent = new Array(n).fill(-1);
+    /* 找到与节点 0 最远的节点 x */
+    let x = findLongestNode(0, parent, adj);
+    /* 找到与节点 x 最远的节点 y */
+    let y = findLongestNode(x, parent, adj);
+    /* 求出节点 x 到节点 y 的路径 */
+    const path = [];
+    parent[x] = -1;
+    while (y !== -1) {
+        path.push(y);
+        y = parent[y];
+    }
+    const m = path.length;
+    if (m % 2 === 0) {
+        ans.push(path[Math.floor(m / 2) - 1]);
+    }
+    ans.push(path[Math.floor(m / 2)]);
+    return ans;
+}
+
+const findLongestNode = (u, parent, adj) => {
+    const n = adj.length;
+    const dist = new Array(n).fill(-1);
+    dist[u] = 0;
+
+    const dfs = (u, dist, parent, adj) => {
+        for (const v of adj[u]) {
+            if (dist[v] < 0) {
+                dist[v] = dist[u] + 1;
+                parent[v] = u;
+                dfs(v, dist, parent, adj); 
+            }
+        }
+    }
+
+    dfs(u, dist, parent, adj);
+    let maxdist = 0;
+    let node = -1;
+    for (let i = 0; i < n; i++) {
+        if (dist[i] > maxdist) {
+            maxdist = dist[i];
+            node = i;
+        }
+    }
+    return node;
+}
+```
+## 4月14日
+### 1、[689划分为k个相等的子集](https://leetcode-cn.com/problems/partition-to-k-equal-sum-subsets/)
+#### 题目描述
+给定一个整数数组**nums**和一个正整数**k**，找出是否有可能把这个数组分成**k**个非空子集，其总和都相等。
+#### 解题思路
+**从n个数字的视角**
+1. 以数字的视角，选择**k**个桶
+2. 尽可能多的情况命中剪枝的那个**if**分支，就可以减少递归调用的次数，一定程度上减少时间复杂度
+3. 如何尽可能多的命中这个**if**分支呢？要知道我们的**index**参数是从**0**开始递增的，也就是递归地从**0**开始遍历**nums**数组
+4. 如果我们提前对**nums**数组排序，把大的数字排在前面，那么大的数字会先被分配到**bucket**中，对于之后的数字，`bucket[i] + nums[index]`会更大，更容易触发剪枝的**if**条件
+5. 这种解法即便经过了排序优化，也明显比第二种解法慢很多，也就是从数字的角度进行穷举，**n**个数字，每个数字有**k**个桶可供选择，所以组合出的结果个数为`k^n`，时间复杂度也就是`O(k^n)`
+**我们应该尽量「少量多次」，就是说宁可多做几次选择，也不要给太大的选择空间；宁可「二选一」选k次，也不要 「k选一」选一次**
+#### 正解
+```javascript
+var canPartitionKSubsets = function (nums, k) {
+    // 排除一些基本情况
+    if (k > nums.length) return false;
+    let sum = nums.reduce((pre, cur) => pre + cur);
+    if (sum % k != 0) return false;
+    /**
+      * 递归穷举 nums 中的每个数字
+      * @param {*} nums
+      * @param {*} index 开始索引
+      * @param {*} bucket 桶
+      * @param {*} target 每个桶都需要达成的目标和
+    */
+    const backtrack = (nums, index, bucket, target) => {
+        // 检查所有桶的数字之和是否都是 target
+        if (index == nums.length) {
+            for (let i = 0; i < bucket.length; i++) {
+                if (bucket[i] != target) {
+                    return false;
+                }
+            }
+            // nums 成功平分成 k 个子集
+            return true;
+        }
+        // 穷举 nums[index] 可能装入的桶
+        for (let i = 0; i < bucket.length; i++) {
+            // 剪枝，桶装装满了
+            if (bucket[i] + nums[index] > target) {
+                continue;
+            }
+            // 将 nums[index] 装入 bucket[i]
+            bucket[i] += nums[index];
+            // 递归穷举下一个数字的选择
+            if (backtrack(nums, index + 1, bucket, target)) {
+                return true;
+            }
+            // 撤销选择
+            bucket[i] -= nums[index];
+        }
+        // nums[index] 装入哪个桶都不行
+        return false;
+    };
+    // k 个桶（集合），记录每个桶装的数字之和
+    let bucket = new Array(k).fill(0);
+    // 理论上每个桶（集合）中数字的和
+    let target = sum / k;
+    /* 降序排序 nums 数组   优化方式，以期尽快的命中剪枝*/
+    nums.sort((a, b) => b - a);
+    // 穷举，看看 nums 是否能划分成 k 个和为 target 的子集
+    return backtrack(nums, 0, bucket, target);
+};
+```
+## 4月15日
+### 1、[前序遍历构造二叉搜索树](https://leetcode-cn.com/problems/construct-binary-search-tree-from-preorder-traversal/)
+#### 题目描述
+给定一个整数数组，它表示**BST**(即**二叉搜索树**)的**先序遍历**，构造树并返回其根。   
+保证对于给定的测试用例，总是有可能找到具有给定需求的二叉搜索树。   
+**二叉搜索树**是一棵二叉树，其中每个节点，`Node.left`的任何后代的值 严格小于`Node.val`,`Node.right`的任何后代的值**严格大于** `Node.val`。   
+二叉树的**前序遍历**首先显示节点的值，然后遍历`Node.left`，最后遍历`Node.right`。
+#### 解题思路
+1. 生成二叉树的题目，无非就是先生成根节点，然后递归生成左右子树，最后把根节点和左右子树连接起来。具体区别在于你如何找到根节点，如何划分左右子树。
+2. 根据前序遍历的特点是，根节点在第一位，后面接着左子树和右子树；
+3. **BST**的特点，左子树都比根节点的值小，右子树都比根节点的值大。
+4. 所以如何找到根节点？前序遍历的第一个就是根节点。
+5. 如何找到左右子树？比根节点小的就是左子树的节点，比根节点大的就是右子树的节点。
+6. 最后，确定清楚**build**函数的定义，利用这个函数递归生成**BST**即可。
+#### 正解
+```javascript
+var bstFromPreorder = function (preorder) {
+    const build = (preorder, start, end) => {
+        if (start > end) return null;
+        // 根据前序遍历的特点，根节点在第一位，后面接着左子树和右子树
+        let rootVal = preorder[start];
+        let root = new TreeNode(rootVal);
+        // 根据 BST 的特点，左子树都比根节点的值小，右子树都比根节点的值大
+        // rootIndex 就是左右子树的分界点
+        let rootIndex = start;
+        while (rootIndex <= end) {
+            if (preorder[rootIndex] > preorder[start]) break;
+            rootIndex++;
+        }
+        // [start+1, rootIndex-1] 区间内是左子树元素
+        root.left = build(preorder, start + 1, rootIndex - 1);
+        // [rootIndex, end] 区间内是右子树元素
+        root.right = build(preorder, rootIndex, end);
+        return root;
+    };
+    // 前闭后闭区间
+    return build(preorder, 0, preorder.length - 1);
 };
 ```
